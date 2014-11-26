@@ -84,12 +84,6 @@ class Salt(object):
                 print('{0} already exists, please destroy this vm beforehand'.format(n.name))
                 sys.exit(1)
 
-    def destroy(self):
-        for n in self.nodes:
-            if n.state == 'RUNNING' and n.name in SALT_NODES:
-                retval = self.driver.destroy_node(n)
-                print('{0} is destoyed: {1}'.format(name,retval))
-
     def deploy(self,name,bootstrap):
         self.exit_if_vm_exists()
         start = time.time()
@@ -124,8 +118,6 @@ curl -L http://bootstrap.saltstack.com | sh
             salt.deploy(name,minion_bootstrap)
     elif command == 'list':
         salt.print_nodes()
-    elif command == 'destroy':
-        salt.destroy()
     else:
         print 'env does not exists: {0}'.format(args.env)
         sys.exit(1)
@@ -134,7 +126,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="")
     parser.add_argument("command",type=str,help="Simple Salt Command",
                         default='list', 
-                        choices=["deploy","destroy","list"])
+                        choices=["deploy","list"])
     args = parser.parse_args()
     return args
 
